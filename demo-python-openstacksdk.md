@@ -30,7 +30,7 @@ Nobuteru Nishida(@n-nishida on github)
 ---
 ## API
 
-- 一般的にWebAPIを意味する。(Webサービスも類語)  
+- ここでは、WebAPIのことを言います。(Webサービスも類語)  
   - 本来は違う意味だが、一部の人はWebAPIの意味でRESTという言葉を使う人もいる…
 - WebAPIは、HTTPでリクエストを受け取り、
 - リクエストに応じた処理を行い、
@@ -113,9 +113,10 @@ nova reboot [--hard] [--poll] <server>
   - 使いやすいマルチスレッド、プロセス間通信、デーモン
 
 ---
-## SDKの弱点
-- APIより楽だが、CLIほど簡単に実行はできない。
-- 特定言語に対する理解が必要
+## API・SDK・CLIの性格
+- 使いやすさ: API < SDK < CLI
+- 実装の自由度: API > SDK > CLI
+
 
 ---
 ## Agenda
@@ -157,7 +158,7 @@ nova reboot [--hard] [--poll] <server>
 - SDKは数あるものの、開発途上のものも多い。
 - Openstack自体はPython製であるため、
 - 現状python-XXXXXclientが多く使われる。
-- またFogのようにマルチクラウド対応のAPIもある。
+- またFogのようにマルチクラウド対応のSDKもある。
   - AWSやOpenstackのような異なるテナントに対して、
   - 同じオブジェクトから操作できる。
 
@@ -482,8 +483,17 @@ nova_client.servers.list()  # return Server objs
     - APIと直接紐付いたメソッド群を持つ
     - メソッドの戻り値は、基本的にディクト型を返す
 
+---
+## まとめ
+- SDKを使うと、
+  - CLIでは実装が難しい分岐処理がより簡単
+  - 豊富なライブラリを利用することが可能
+- python-clientsは、
+  - プロジェクトごとに独自の実装なので個別調査が必要
+- python-openstacksdkは、
+  - 操作の作法が一定で、統一されている。
+  - 一方で、まだバグも多く今後に期待。
 
 
 ---
-# おしまい
-    
+### ご清聴ありがとうございました！
