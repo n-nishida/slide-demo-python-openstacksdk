@@ -354,24 +354,110 @@ routers = conn.network.list_routers()
 ---
 ## Before 
 
-![](./images/before.png =100x20)
+<img src="images/before.png" alt="" width="300" height="500">
 
 ---
 ## After  
 
-![](images/after.png =100x20)
+<img src="images/after.png" alt="" width="300" height="500">
 
 
 ---
 ## 事前準備
-  - 今回はDEMOで利用してみたものの、バグに3〜4件ほど遭遇。
-    - novaのaction系メソッドがput
-    - resource.find_系メソッドがidしか返さない
-    - deleteメソッドがものによって機能しない
-  - 試行錯誤しながら、DEMO実装はできたものの、まだリリース前なので実用は難しそう。
+  - Openstack環境を準備
+    - regionは無し
+    - availability_zoneはnova
+    - novaのAPIはv2
+    - keystoneのAPIはv2
+  - 以下の環境変数を設定
+    - OS_AUTH_URL, OS_USERNAME  
+      OS_PASSWORD, OS_TENANT_NAME  
+  - githubからデモツールのソースコードを取得。
+  - requirements.txtからライブラリインストール
+  
 ```
+source path/to/your/openrc
 git clone https://github.com/n-nishida/demo-python-openstacksdk
 cd demo-python-openstacksdk
 pip install -r requirements.txt
 ```
 
+---
+## 実行(python-client版)
+
+```
+python create_by_python-clients.py 
+  --external_network_name publicNW 
+  --external_network_dns_server_ip_address 192.168.100.254 
+  --cidr_can_connect_to_server 192.168.100.0/24 
+  --server_image_name centos-base 
+  --server_flavor_name m1.xsmall 
+  --server_count 3
+python delete_by_python-clients.py
+```
+
+---
+## 実行(python-openstacksdk版)
+
+```
+python create_by_python-openstacksdk.py 
+  --external_network_name publicNW 
+  --external_network_dns_server_ip_address 192.168.100.254 
+  --cidr_can_connect_to_server 192.168.100.0/24 
+  --server_image_name centos-base 
+  --server_flavor_name m1.xsmall 
+  --server_count 3
+python delete_by_python-openstacksdk.py
+```
+
+
+---
+## create成功時の標準出力
+
+```
+create router         : Demo-Router
+create network        : Demo-Net
+create subnet         : Demo-Subnet
+add router interface...
+create security_group : Demo-Securitygroup
+create keypair        : Demo-Keypair
+create keypair file   : Demo-Keypair.pem
+　
+id of demo_server0            : 767a4c64-754d-421a-aeb5-a7b6bbaab333
+fixed_ip of demo_server0      : 192.168.0.2
+floating_ip of demo_server0   : 192.168.100.213
+　
+id of demo_server1            : d477e2a4-f8cf-4e08-a6c7-c3fe62842e8e
+fixed_ip of demo_server1      : 192.168.0.4
+floating_ip of demo_server1   : 192.168.100.214
+　
+id of demo_server2            : b2eddf39-30ff-4398-bf73-d00600362098
+fixed_ip of demo_server2      : 192.168.0.5
+floating_ip of demo_server2   : 192.168.100.215
+　
+...Finished!
+You can connect to server by using following command
+ssh -i Demo-Keypair.pem user@server
+```
+
+
+---
+## delete成功時の標準出力
+
+```
+deleting floating_ip    : 192.168.100.215
+deleting server         : demo_server2
+deleting floating_ip    : 192.168.100.214
+deleting server         : demo_server1
+deleting floating_ip    : 192.168.100.213
+deleting server         : demo_server0
+deleting security_group : Demo-Securitygroup
+deleting keypair        : Demo-Keypair
+deleting subnet         : Demo-Subnet
+deleting network        : Demo-Net
+deleting router         : Demo-Router
+...Finished!
+```
+
+---
+## コード解説
