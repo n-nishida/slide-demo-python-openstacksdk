@@ -35,8 +35,8 @@ Nobuteru Nishida(@n-nishida on github)
 - WebAPIは、HTTPでリクエストを受け取り、
 - リクエストに応じた処理を行い、
 - 処理の結果をユーザに、HTTPでレスポンスする。
-- HTTPで仕様が厳格に定義されており、
-- あらゆるプログラムがリモートで利用できる。
+- HTTPで仕様が定義されており、
+- HTTPに対応したプログラムであれば利用できる。
   - 処理の自動化が可能。
 
 ---
@@ -90,14 +90,6 @@ curl http://~/action -X POST -H "X-Auth-Token: 93e34~~~" -d '{"reboot":{"type":"
 ```
 nova reboot [--hard] [--poll] <server>
 ```
-
----
-### 面倒は解消されました。
-### これでSDKは不要です。
-### ご清聴ありがとうございました！
-
----
-# 嘘です！
 
 ---
 ## SDK
@@ -162,12 +154,12 @@ nova reboot [--hard] [--poll] <server>
 
 ---
 ## Openstack SDKs
-- SDKは数あるものの、多くが開発途上で、
-- またOpenstackの機能自体がPython製であるため、
-- 現状ではpython-XXXXXclient系が多く使われる。
+- SDKは数あるものの、開発途上のものも多い。
+- Openstack自体はPython製であるため、
+- 現状python-XXXXXclientが多く使われる。
 - またFogのようにマルチクラウド対応のAPIもある。
-  - AWSやOpenstackのようなテナントに対して、
-  - 同じオブジェクトから処理を実行できる。
+  - AWSやOpenstackのような異なるテナントに対して、
+  - 同じオブジェクトから操作できる。
 
 
 ---
@@ -365,8 +357,7 @@ routers = conn.network.list_routers()
 ---
 ## 事前準備
   - Openstack環境を準備
-    - regionは無し
-    - availability_zoneはnova
+    - regionやavailability_zoneは1つ
     - novaのAPIはv2
     - keystoneのAPIはv2
   - 以下の環境変数を設定
@@ -461,3 +452,38 @@ deleting router         : Demo-Router
 
 ---
 ## コード解説
+- pythonライブラリ関連
+  - ConfigParserライブラリ
+  - clickライブラリ
+- python_clients関連
+  - 非同期処理の考慮
+    - server.delete()はAPI側では非同期処理  
+      そのため、serverが削除される前にネットワークを  
+      削除しようとするとエラーになるので注意。
+
+
+---
+## コード解説
+- python_clients関連
+  - nova_clientの仕様
+    - Serverに代表される各リソースのManagerオブジェクトを持つ
+    - 各Managerは、リソースのAPIと紐付いたメソッド群を持つ
+    - このメソッドの戻り値は、基本的にリソースオブジェクト
+    - リソースオブジェクトからも、同様に自身に対する操作が可能。
+```
+nova_client.servers         # ServerManager obj
+nova_client.servers.list()  # return Server objs
+```
+
+---
+## コード解説
+- python_clients関連
+  - neutron_clientの仕様
+    - APIと直接紐付いたメソッド群を持つ
+    - メソッドの戻り値は、基本的にディクト型を返す
+
+
+
+---
+# おしまい
+    
