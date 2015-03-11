@@ -497,3 +497,5 @@ nova_client.servers.list()  # return Server objs
 
 ---
 ### ご清聴ありがとうございました！
+### slide:  http://n-nishida.github.io/slide-demo-python-openstacksdk
+### source: https://github.com/n-nishida/demo-python-openstacksdk
