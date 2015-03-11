@@ -30,7 +30,7 @@ Nobuteru Nishida(@n-nishida on github)
 ---
 ## API
 
-- ここでは、WebAPIのことを言います。(Webサービスも類語)  
+- ここでは、WebAPIのこと。(Webサービスも類語)  
   - 本来は違う意味だが、一部の人はWebAPIの意味でRESTという言葉を使う人もいる…
 - WebAPIは、HTTPでリクエストを受け取り、
 - リクエストに応じた処理を行い、
